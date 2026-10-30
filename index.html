@@ -4,356 +4,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A question for you 💌</title>
+<title>A question for you</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-:root {
-  --bg: #2b1020;
-  --bg2: #4a1a35;
-  --rose: #ff4d7d;
-  --blush: #ffd6e3;
-  --text: #fff4f7;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-}
-
-html, body {
-  min-height: 100%;
-}
-
-body {
-  font-family: 'Nunito', sans-serif;
-  color: var(--text);
-  background: radial-gradient(circle at 30% 20%, var(--bg2), var(--bg) 70%);
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  overflow-x: hidden;
-  padding: 20px 0;
-}
-
-.hearts {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.heart {
-  position: absolute;
-  bottom: -40px;
-  animation: float linear forwards;
-  opacity: .6;
-}
-
-@keyframes float {
-  to {
-    transform: translateY(-110vh) rotate(25deg);
-    opacity: 0;
-  }
-}
-
-main {
-  position: relative;
-  z-index: 1;
-  padding: 24px;
-  max-width: 600px;
-  width: 100%;
-}
-
-.screen {
-  display: none;
-  animation: appear .4s ease;
-}
-
-.screen.active {
-  display: block;
-}
-
-@keyframes appear {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-h1 {
-  font-family: 'Caveat', cursive;
-  font-size: clamp(2.5rem, 10vw, 4.4rem);
-  line-height: 1.05;
-  margin-bottom: 14px;
-}
-
-h2 {
-  font-family: 'Caveat', cursive;
-  font-size: 2.5rem;
-  margin-bottom: 15px;
-}
-
-p.sub {
-  font-size: 1.05rem;
-  color: var(--blush);
-  margin-bottom: 28px;
-  line-height: 1.6;
-}
-
-.emoji {
-  font-size: 4rem;
-  margin-bottom: 12px;
-  display: block;
-}
-
-button {
-  font: 700 1rem 'Nunito', sans-serif;
-  border: 0;
-  border-radius: 999px;
-  padding: 13px 25px;
-  cursor: pointer;
-  transition: transform .2s ease, background .2s ease;
-}
-
-button:focus-visible {
-  outline: 3px solid var(--blush);
-  outline-offset: 3px;
-}
-
-.primary {
-  background: var(--rose);
-  color: white;
-  box-shadow: 0 8px 24px rgba(255,77,125,.35);
-}
-
-.primary:hover {
-  transform: scale(1.05);
-}
-
-.secondary {
-  background: transparent;
-  color: var(--blush);
-  border: 2px solid var(--blush);
-}
-
-.back-button {
-  background: rgba(255,255,255,.1);
-  color: var(--blush);
-  padding: 10px 17px;
-  margin-bottom: 25px;
-  display: block;
-}
-
-.answer-row {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-input {
-  font: 400 1rem 'Nunito', sans-serif;
-  padding: 14px 18px;
-  border-radius: 999px;
-  border: 2px solid var(--blush);
-  background: rgba(255,255,255,.08);
-  color: var(--text);
-  width: min(280px, 100%);
-  text-align: center;
-}
-
-input::placeholder {
-  color: rgba(255,214,227,.6);
-}
-
-input:focus-visible {
-  outline: 3px solid var(--blush);
-  outline-offset: 3px;
-}
-
-.wrong {
-  margin-top: 18px;
-  font-weight: 700;
-  color: #ff9db8;
-}
-
-.hint {
-  margin-top: 8px;
-  color: var(--blush);
-  font-style: italic;
-}
-
-.shake {
-  animation: shake .4s;
-}
-
-@keyframes shake {
-  25% { transform: translateX(-8px); }
-  75% { transform: translateX(8px); }
-}
-
-/* Main choice bubbles */
-
-.choice-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 28px;
-  margin-top: 35px;
-}
-
-.choice-bubble {
-  width: 175px;
-  height: 175px;
-  border-radius: 50%;
-  background: rgba(255,77,125,.16);
-  border: 2px solid var(--rose);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  padding: 15px;
-  box-shadow: 0 8px 28px rgba(255,77,125,.18);
-}
-
-.choice-bubble:hover {
-  transform: scale(1.07);
-  background: rgba(255,77,125,.3);
-}
-
-.choice-icon {
-  font-size: 2.8rem;
-}
-
-.choice-bubble span:last-child {
-  font-size: .95rem;
-}
-
-/* Developer's Secrets list */
-
-.question-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.question-button {
-  width: 100%;
-  background: rgba(255,255,255,.09);
-  border: 1px solid rgba(255,214,227,.4);
-  color: var(--text);
-  text-align: left;
-  border-radius: 15px;
-  padding: 16px 18px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.question-button:hover {
-  background: rgba(255,77,125,.25);
-  transform: translateX(4px);
-}
-
-.question-number {
-  color: var(--rose);
-  font-weight: 700;
-  min-width: 25px;
-}
-
-.message-card {
-  background: rgba(255,255,255,.09);
-  border: 1px solid rgba(255,214,227,.35);
-  border-radius: 20px;
-  padding: 25px;
-  margin-top: 20px;
-  line-height: 1.8;
-  color: var(--blush);
-  font-size: 1.05rem;
-  white-space: pre-line;
-}
-
-/* Video */
-
-.video-box {
-  background: rgba(255,255,255,.08);
-  border: 2px dashed var(--blush);
-  border-radius: 20px;
-  padding: 25px;
-  margin: 25px 0;
-}
-
-video {
-  width: 100%;
-  border-radius: 15px;
-  display: none;
-}
-
-#videoPlaceholder {
-  padding: 35px 10px;
-  color: var(--blush);
-}
-
-#markRead:disabled {
-  opacity: .4;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.small-note {
-  color: var(--blush);
-  font-size: .9rem;
-  margin-top: 15px;
-}
-
-/* Final question */
-
-.final-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-top: 30px;
-  min-height: 100px;
-}
-
-#finalNo.runaway {
-  position: fixed;
-  z-index: 5;
-}
-
-/* Mobile */
-
-@media (max-width: 450px) {
-  main {
-    padding: 18px;
-  }
-
-  .choice-bubble {
-    width: 145px;
-    height: 145px;
-  }
-
-  .choice-icon {
-    font-size: 2.3rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    transition-duration: .01ms !important;
-  }
-}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Karla:wght@400;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/main.css">
 </head>
 
 <body>
+
+<div class="progress-track" aria-hidden="true">
+  <div class="progress-thread" id="progressThread"></div>
+</div>
 
 <div class="hearts" id="hearts" aria-hidden="true"></div>
 
@@ -362,8 +24,15 @@ video {
 <!-- 1. PASSWORD GATE -->
 
 <section class="screen active" id="gate">
-  <span class="emoji">🔐</span>
-  <h1>Before we start, you have to answer a simple question</h1>
+  <span class="icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M8 21V7a4 4 0 1 1 8 0c0 2-2 3-2 5"/><circle cx="8" cy="21" r="1.4" fill="currentColor" stroke="none"/></svg>
+  </span>
+  <h1 class="romantic-text">
+    <span class="heading-heart" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 5a5.5 5.5 0 0 1 9.5 6c-2.5 4.6-9.5 9-9.5 9z"/></svg></span>
+    Before we start, you have to answer a simple question
+    <span class="heading-heart" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 5a5.5 5.5 0 0 1 9.5 6c-2.5 4.6-9.5 9-9.5 9z"/></svg></span>
+  </h1>
+  <div class="chain-divider" aria-hidden="true"></div>
   <p class="sub">Who would you love to always be around?</p>
 
   <div class="answer-row">
@@ -379,19 +48,35 @@ video {
 <!-- 2. MAIN MENU -->
 
 <section class="screen" id="home">
-  <span class="emoji">💌</span>
-  <h1>Welcome, Kasimma ❤️</h1>
+  <span class="icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M4 12c4-3 8 3 12 0"/><path d="M5 8c4 4 10-2 14 2"/><path d="M5 16c4-4 10 2 14-2"/></svg>
+  </span>
+  <div class="stitch-heading-wrap">
+    <svg class="stitch-thread" id="welcomeThread" viewBox="0 0 140 24" aria-hidden="true">
+      <path d="M4,16 C30,2 60,26 90,10 S132,4 136,14"/>
+      <circle class="hook" r="3"/>
+    </svg>
+    <svg class="stitch-name" id="welcomeName" viewBox="0 0 400 70" aria-hidden="true">
+      <text x="200" y="48" text-anchor="middle" class="stitch-text"></text>
+    </svg>
+    <h1 id="welcomeHeading" class="sr-only">Welcome, Kasimma</h1>
+  </div>
+  <div class="chain-divider" aria-hidden="true"></div>
   <p class="sub">I have prepared two little things for you. Which one would you like to explore first?</p>
 
   <div class="choice-container">
 
     <button class="choice-bubble" id="openVideo">
-      <span class="choice-icon">🎬</span>
+      <span class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
+      </span>
       <span>Watch the video</span>
     </button>
 
     <button class="choice-bubble" id="openSecrets">
-      <span class="choice-icon">💻</span>
+      <span class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="16" rx="3"/><path d="M9 8c2 1 4 1 6 0M9 12c2 1 4 1 6 0M9 16c2 1 4 1 6 0"/></svg>
+      </span>
       <span>Developer's Secrets</span>
     </button>
 
@@ -404,8 +89,11 @@ video {
 <section class="screen" id="secrets">
   <button class="back-button" id="secretsHome">← Back to choices</button>
 
-  <span class="emoji">💻</span>
+  <span class="icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="16" rx="3"/><path d="M9 8c2 1 4 1 6 0M9 12c2 1 4 1 6 0M9 16c2 1 4 1 6 0"/></svg>
+  </span>
   <h1>Developer's Secrets</h1>
+  <div class="chain-divider" aria-hidden="true"></div>
   <p class="sub">A few things you should know about what goes on in my head. 😏</p>
 
   <div class="question-list" id="questionList"></div>
@@ -417,7 +105,9 @@ video {
 <section class="screen" id="secretAnswer">
   <button class="back-button" id="answerBack">← Back to questions</button>
 
-  <span class="emoji">💗</span>
+  <span class="icon icon--rose" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 5a5.5 5.5 0 0 1 9.5 6c-2.5 4.6-9.5 9-9.5 9z" stroke-dasharray="2.2 2.2"/></svg>
+  </span>
   <h2 id="secretTitle"></h2>
 
   <div id="passwordArea" hidden>
@@ -440,8 +130,11 @@ video {
 <section class="screen" id="reassurance">
   <button class="back-button" id="reassuranceBack">← Back to questions</button>
 
-  <span class="emoji">🫶</span>
+  <span class="icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>
+  </span>
   <h1>A little reminder for you</h1>
+  <div class="chain-divider" aria-hidden="true"></div>
 
   <div class="message-card" id="reassuranceText">
     YOUR_REASSURANCE_MESSAGE_GOES_HERE
@@ -454,14 +147,19 @@ video {
 <section class="screen" id="videoPage">
   <button class="back-button" id="videoBack">← Back to choices</button>
 
-  <span class="emoji">🎥</span>
+  <span class="icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
+  </span>
   <h1>Something I made for you</h1>
+  <div class="chain-divider" aria-hidden="true"></div>
   <p class="sub">Take your time and watch this. There's something I want you to see. ❤️</p>
 
   <div class="video-box">
 
     <div id="videoPlaceholder">
-      <span style="font-size:3rem;">🎞️</span>
+      <span class="icon" aria-hidden="true" style="width:40px;height:40px;">
+        <svg viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="16" rx="3"/><path d="M9 8c2 1 4 1 6 0M9 12c2 1 4 1 6 0M9 16c2 1 4 1 6 0"/></svg>
+      </span>
       <p>Your video will appear here.</p>
       <p class="small-note">Waiting for the MP4 file...</p>
     </div>
@@ -483,8 +181,11 @@ video {
 <!-- 7. THE QUESTION INTRODUCTION -->
 
 <section class="screen" id="questionIntro">
-  <span class="emoji">🥺</span>
+  <span class="icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M12 12c-3-5-9-4-9 0s6 5 9 0z"/><path d="M12 12c3-5 9-4 9 0s-6 5-9 0z"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>
+  </span>
   <h1>I have a question for you, Kasimma...</h1>
+  <div class="chain-divider" aria-hidden="true"></div>
   <p class="sub">Do you want to hear it? ❤️</p>
 
   <div class="final-buttons">
@@ -497,8 +198,11 @@ video {
 <!-- 8. QUESTION REVEAL -->
 
 <section class="screen" id="questionReveal">
-  <span class="emoji">💌</span>
+  <span class="icon icon--rose" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><circle cx="8" cy="14" r="3"/><circle cx="16" cy="14" r="3"/><path d="M12 17v4"/></svg>
+  </span>
   <h1>Okay, here it is...</h1>
+  <div class="chain-divider" aria-hidden="true"></div>
 
   <div class="message-card">
     YOUR_FINAL_QUESTION_GOES_HERE
@@ -507,447 +211,7 @@ video {
 
 </main>
 
-
-<script>
-
-/* =========================================
-   EDIT THESE DETAILS
-========================================= */
-
-const HER_NAME = "Kasimma";
-
-/*
-  Leave this empty for now.
-  When you upload your video, put its filename here.
-  Example: "video.mp4"
-*/
-const VIDEO_FILE = "";
-
-
-/* =========================================
-   DEVELOPER'S SECRETS
-========================================= */
-
-const questions = [
-
-  {
-    title: "Question 1 goes here",
-    answer: "YOUR_FIRST_ANSWER_GOES_HERE"
-  },
-
-  {
-    title: "What happens when I think about you?",
-    answer: "I would genuinely continue thinking about you to the point that my friends would be calling my name and I wouldn't even hear them because you're the only one in my mind. And yes, that exact thing has happened before. I would just be smiling so much. You're my home away from home, basically."
-  },
-
-  {
-    title: "What is my favourite thing about you?",
-    answer: "Your voice, your eyes, your smile, which is rare to others but not rare to me, how you make me feel loved, how you can never admit you really, really like me when we all know the truth that you can't resist me, the fact that you do a lot to help others (maybe for your CV), but you do help a lot, like FIG and all those activities. You as a whole are my favourite thing. 😉😏"
-  },
-
-  {
-    title: "What happens to my mood when I see your message?",
-    answer: "It immediately lightens up. I just tend to start smiling while texting you. You're my muse."
-  },
-
-  {
-    title: "How badly do I want to see you?",
-    answer: "Badly. Every day of my life, every minute of my life. Time drags when I'm away from you, but when I'm with you, I just want to remain there forever."
-  },
-
-  {
-    title: "How important are you to me?",
-    answer: "Are we really joking, bruh? You mean the world to me. That's not even a question. You're the number one girl in my life. Like, I wake up thinking about you. If that doesn't say how important you are to me, omooooo."
-  },
-
-  {
-    title: "What would I do just to see you smile?",
-    answer: "I would do almost anything. If it's to break my bank, I would. If it is to be with you until you smile, so be it. If it is to send you a small note to make you happy, I would. I would travel far just to see you smile, Kasimma."
-  },
-
-  {
-    title: "What is my favourite place to be?",
-    answer: "Being with you, obviously. What other answer can there be? 😏😏😏"
-  },
-
-  {
-    title: "What is the one thing I wish I could do right now?",
-    answer: "Kiss you to my heart's content. I want to snuggle you until I start to smell like you. I want to be in your arms for a long time because that is my safe space. I want to see what others haven't. I want to make you feel so good. I want to kiss you so badly every single time.",
-    password: "cheeky"
-  },
-
-  {
-    title: "How lucky do I feel to have you?",
-    answer: "YOUR_TENTH_ANSWER_GOES_HERE"
-  },
-
-  {
-    title: "Question 11 goes here",
-    answer: "YOUR_ELEVENTH_ANSWER_GOES_HERE"
-  },
-
-  {
-    title: "Question 12 goes here",
-    answer: "YOUR_TWELFTH_ANSWER_GOES_HERE"
-  }
-
-];
-
-
-/* =========================================
-   SCREEN NAVIGATION
-========================================= */
-
-const screens = document.querySelectorAll(".screen");
-
-function showScreen(screenId) {
-  screens.forEach(screen => {
-    screen.classList.remove("active");
-  });
-
-  document.getElementById(screenId).classList.add("active");
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
-
-
-/* =========================================
-   FIRST PASSWORD GATE
-========================================= */
-
-const correctAnswers = ["ife", "ifeoluwa", "oloyede"];
-
-const answerInput = document.getElementById("answer");
-const wrongMsg = document.getElementById("wrong");
-const hintMsg = document.getElementById("hint");
-
-function checkAnswer() {
-  const value = answerInput.value.trim().toLowerCase();
-
-  if (correctAnswers.includes(value)) {
-    showScreen("home");
-  } else {
-    wrongMsg.hidden = false;
-    hintMsg.hidden = false;
-
-    answerInput.classList.remove("shake");
-    void answerInput.offsetWidth;
-    answerInput.classList.add("shake");
-
-    answerInput.select();
-  }
-}
-
-document.getElementById("submit").addEventListener("click", checkAnswer);
-
-answerInput.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    checkAnswer();
-  }
-});
-
-
-/* =========================================
-   MAIN MENU NAVIGATION
-========================================= */
-
-document.getElementById("openSecrets").addEventListener("click", function() {
-  showScreen("secrets");
-});
-
-document.getElementById("openVideo").addEventListener("click", function() {
-  showScreen("videoPage");
-});
-
-document.getElementById("secretsHome").addEventListener("click", function() {
-  showScreen("home");
-});
-
-document.getElementById("videoBack").addEventListener("click", function() {
-  showScreen("home");
-});
-
-
-/* =========================================
-   BUILD THE QUESTION LIST
-========================================= */
-
-const questionList = document.getElementById("questionList");
-
-function buildQuestionList() {
-
-  // Reassurance button comes FIRST.
-  const reassuranceButton = document.createElement("button");
-
-  reassuranceButton.className = "question-button";
-  reassuranceButton.innerHTML = `
-    <span class="question-number">💗</span>
-    <span>A little reassurance for you</span>
-  `;
-
-  reassuranceButton.addEventListener("click", function() {
-    showScreen("reassurance");
-  });
-
-  questionList.appendChild(reassuranceButton);
-
-
-  // Then all 12 questions.
-  questions.forEach(function(question, index) {
-
-    const button = document.createElement("button");
-
-    button.className = "question-button";
-
-    button.innerHTML = `
-      <span class="question-number">${index + 1}.</span>
-      <span>${question.title}</span>
-    `;
-
-    button.addEventListener("click", function() {
-      openQuestion(index);
-    });
-
-    questionList.appendChild(button);
-
-  });
-}
-
-buildQuestionList();
-
-
-/* =========================================
-   OPEN INDIVIDUAL QUESTIONS
-========================================= */
-
-let currentQuestionIndex = null;
-
-const secretTitle = document.getElementById("secretTitle");
-const secretContent = document.getElementById("secretContent");
-const passwordArea = document.getElementById("passwordArea");
-const passwordInput = document.getElementById("secretPassword");
-const passwordWrong = document.getElementById("passwordWrong");
-
-function openQuestion(index) {
-
-  currentQuestionIndex = index;
-
-  const question = questions[index];
-
-  secretTitle.textContent = question.title;
-
-  secretContent.hidden = true;
-  passwordArea.hidden = true;
-  passwordWrong.hidden = true;
-  passwordInput.value = "";
-
-  if (question.password) {
-    passwordArea.hidden = false;
-  } else {
-    secretContent.textContent = question.answer;
-    secretContent.hidden = false;
-  }
-
-  showScreen("secretAnswer");
-}
-
-
-/* =========================================
-   QUESTION 9 PASSWORD
-========================================= */
-
-function unlockQuestion() {
-
-  const question = questions[currentQuestionIndex];
-
-  const enteredPassword = passwordInput.value.trim().toLowerCase();
-
-  if (enteredPassword === question.password.toLowerCase()) {
-
-    passwordArea.hidden = true;
-
-    secretContent.textContent = question.answer;
-    secretContent.hidden = false;
-
-  } else {
-
-    passwordWrong.hidden = false;
-
-    passwordInput.classList.remove("shake");
-    void passwordInput.offsetWidth;
-    passwordInput.classList.add("shake");
-
-    passwordInput.select();
-  }
-}
-
-document.getElementById("unlockSecret").addEventListener("click", unlockQuestion);
-
-passwordInput.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    unlockQuestion();
-  }
-});
-
-
-/* =========================================
-   BACK BUTTONS
-========================================= */
-
-document.getElementById("answerBack").addEventListener("click", function() {
-  showScreen("secrets");
-});
-
-document.getElementById("reassuranceBack").addEventListener("click", function() {
-  showScreen("secrets");
-});
-
-
-/* =========================================
-   REASSURANCE MESSAGE
-========================================= */
-
-// Your reassurance message will go here.
-document.getElementById("reassuranceText").textContent =
-  "YOUR_REASSURANCE_MESSAGE_GOES_HERE";
-
-
-/* =========================================
-   VIDEO SETUP
-========================================= */
-
-const video = document.getElementById("myVideo");
-const videoPlaceholder = document.getElementById("videoPlaceholder");
-const markRead = document.getElementById("markRead");
-const videoStatus = document.getElementById("videoStatus");
-
-let videoFinished = false;
-
-if (VIDEO_FILE !== "") {
-
-  video.src = VIDEO_FILE;
-  video.style.display = "block";
-  videoPlaceholder.style.display = "none";
-
-}
-
-video.addEventListener("ended", function() {
-
-  videoFinished = true;
-
-  markRead.disabled = false;
-
-  videoStatus.textContent =
-    "You've finished watching! Click below when you're ready. 💗";
-
-});
-
-markRead.addEventListener("click", function() {
-
-  if (!videoFinished) {
-    return;
-  }
-
-  showScreen("questionIntro");
-
-});
-
-
-/* =========================================
-   FINAL QUESTION INTRODUCTION
-========================================= */
-
-document.getElementById("hearQuestion").addEventListener("click", function() {
-  showScreen("questionReveal");
-});
-
-
-/* =========================================
-   PLAYFUL NO BUTTON
-========================================= */
-
-const finalNo = document.getElementById("finalNo");
-
-const noMessages = [
-  "No 🙈",
-  "Are you sure? 🥺",
-  "Think again...",
-  "Pretty please?",
-  "Just say yes 😭",
-  "You know you want to 😂"
-];
-
-let noCount = 0;
-
-function dodgeFinalNo() {
-
-  noCount++;
-
-  finalNo.textContent =
-    noMessages[Math.min(noCount, noMessages.length - 1)];
-
-  finalNo.classList.add("runaway");
-
-  const padding = 20;
-
-  const maxX = window.innerWidth - finalNo.offsetWidth - padding;
-  const maxY = window.innerHeight - finalNo.offsetHeight - padding;
-
-  const x = Math.random() * Math.max(0, maxX - padding) + padding;
-  const y = Math.random() * Math.max(0, maxY - padding) + padding;
-
-  finalNo.style.left = x + "px";
-  finalNo.style.top = y + "px";
-}
-
-finalNo.addEventListener("mouseenter", dodgeFinalNo);
-
-finalNo.addEventListener("touchstart", function(e) {
-  e.preventDefault();
-  dodgeFinalNo();
-}, { passive: false });
-
-finalNo.addEventListener("click", dodgeFinalNo);
-
-
-/* =========================================
-   FLOATING HEARTS
-========================================= */
-
-const heartsEl = document.getElementById("hearts");
-
-const symbols = ["💖", "💕", "💗", "💘"];
-
-function spawnHeart() {
-
-  const heart = document.createElement("span");
-
-  heart.className = "heart";
-
-  heart.textContent =
-    symbols[Math.floor(Math.random() * symbols.length)];
-
-  heart.style.left = Math.random() * 100 + "vw";
-
-  heart.style.fontSize =
-    (14 + Math.random() * 22) + "px";
-
-  heart.style.animationDuration =
-    (6 + Math.random() * 6) + "s";
-
-  heartsEl.appendChild(heart);
-
-  setTimeout(function() {
-    heart.remove();
-  }, 12000);
-}
-
-setInterval(spawnHeart, 500);
-
-</script>
+<script type="module" src="scripts/main.js"></script>
 
 </body>
 </html>

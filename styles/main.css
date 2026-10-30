@@ -1,0 +1,624 @@
+:root {
+  --bg: #241229;
+  --bg-deep: #170a1c;
+  --surface: #32203c;
+  --surface-soft: #3e2749;
+  --lilac: #c7a9e8;
+  --lilac-deep: #8a66b8;
+  --lilac-pale: rgba(199, 169, 232, .15);
+  --lilac-soft: rgba(199, 169, 232, .4);
+  --thread: #ab8bd1;
+  --ivory: #f8f1fb;
+  --ink-soft: rgba(248, 241, 251, .68);
+  --rose: #d6465f;
+  --rose-deep: #a62f48;
+  --warn: #e8768f;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Karla', sans-serif;
+  color: var(--ink-soft);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 12% 15%, rgba(199, 169, 232, .14) 0%, transparent 45%),
+    radial-gradient(circle at 88% 85%, rgba(214, 70, 95, .16) 0%, transparent 50%),
+    radial-gradient(circle at 50% 100%, var(--bg-deep) 0%, transparent 60%);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  overflow-x: hidden;
+  padding: 44px 0 20px;
+}
+
+/* ---------- top progress thread ---------- */
+
+.progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--lilac-pale);
+  z-index: 10;
+}
+
+.progress-thread {
+  height: 100%;
+  width: 6%;
+  background: var(--lilac);
+  position: relative;
+  transition: width .5s cubic-bezier(.4, 0, .2, 1);
+}
+
+.progress-thread::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--rose);
+  transform: translateY(-50%);
+}
+
+/* ---------- ambient thread drift ---------- */
+
+.hearts {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.thread-drift {
+  position: absolute;
+  bottom: -60px;
+  opacity: 0;
+  animation: drift linear forwards;
+}
+
+@keyframes drift {
+  0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+  10% { opacity: .35; }
+  90% { opacity: .35; }
+  100% { opacity: 0; transform: translateY(-115vh) rotate(60deg); }
+}
+
+/* ---------- layout ---------- */
+
+main {
+  position: relative;
+  z-index: 1;
+  padding: 24px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+  animation: settle .55s cubic-bezier(.2, .7, .2, 1);
+}
+
+@keyframes settle {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: clamp(2.1rem, 7vw, 3.1rem);
+  line-height: 1.15;
+  color: var(--lilac-deep);
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 1.9rem;
+  color: var(--lilac-deep);
+  margin-bottom: 15px;
+}
+
+p.sub {
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  margin-bottom: 26px;
+  line-height: 1.6;
+}
+
+/* ---------- icons (replace emoji) ---------- */
+
+.icon {
+  display: inline-block;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 10px;
+  color: var(--lilac);
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* the one sentimental spot or two where the romantic red shows through */
+.icon--rose {
+  color: var(--rose);
+}
+
+/* ---------- gate screen: the opening line, dressed up as romantic ---------- */
+
+.romantic-text {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: clamp(1.7rem, 6.5vw, 2.4rem);
+  line-height: 1.35;
+  color: #cdb3f5;
+}
+
+.heading-heart {
+  display: inline-block;
+  width: .55em;
+  height: .55em;
+  vertical-align: middle;
+  margin: 0 .12em;
+  color: var(--ivory);
+  opacity: .9;
+  transform: translateY(-.08em);
+}
+
+.heading-heart svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  fill: currentColor;
+}
+
+/* ---------- chain-stitch divider ---------- */
+
+.chain-divider {
+  width: 100%;
+  max-width: 220px;
+  height: 10px;
+  margin: 2px auto 22px;
+  background-image: repeating-radial-gradient(circle at 5px 5px, transparent 0, transparent 2.5px, var(--thread) 3px, var(--thread) 3.4px, transparent 3.4px);
+  background-size: 14px 10px;
+  background-repeat: repeat-x;
+  opacity: .8;
+}
+
+/* ---------- buttons ---------- */
+
+button {
+  font: 700 1rem 'Karla', sans-serif;
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 25px;
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--lilac-soft);
+  outline-offset: 3px;
+}
+
+.primary {
+  background: var(--lilac-deep);
+  color: var(--ivory);
+  box-shadow: 0 8px 20px rgba(138, 102, 184, .4);
+}
+
+.primary:hover {
+  background: #7a579f;
+  transform: scale(1.04);
+}
+
+.secondary {
+  background: transparent;
+  color: var(--lilac);
+  border: 2px solid var(--thread);
+}
+
+/* the pivotal "yes" moment gets the one warm, romantic accent color */
+#hearQuestion {
+  background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+  box-shadow: 0 10px 26px rgba(214, 70, 95, .45);
+}
+
+#hearQuestion:hover {
+  filter: brightness(1.08);
+  transform: scale(1.04);
+}
+
+.secondary:hover {
+  background: var(--lilac-pale);
+}
+
+.back-button {
+  background: var(--surface);
+  color: var(--lilac);
+  padding: 10px 17px;
+  margin-bottom: 25px;
+  display: block;
+  font-weight: 700;
+}
+
+.back-button:hover {
+  background: var(--surface-soft);
+}
+
+/* ---------- inputs ---------- */
+
+.answer-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+input {
+  font: 400 1rem 'Karla', sans-serif;
+  padding: 14px 18px;
+  border-radius: 999px;
+  border: 2px solid var(--thread);
+  background: var(--surface);
+  color: var(--ivory);
+  width: min(280px, 100%);
+  text-align: center;
+}
+
+input::placeholder {
+  color: var(--ink-soft);
+  opacity: .7;
+}
+
+input:focus-visible {
+  outline: 3px solid var(--lilac-soft);
+  outline-offset: 2px;
+  border-color: var(--lilac);
+}
+
+.wrong {
+  margin-top: 18px;
+  font-weight: 700;
+  color: var(--warn);
+}
+
+.hint {
+  margin-top: 8px;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.shake {
+  animation: shake .4s;
+}
+
+@keyframes shake {
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* ---------- welcome-screen: the name, actually crocheted in ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.stitch-heading-wrap {
+  position: relative;
+  margin-bottom: 4px;
+}
+
+/* the little guide-thread + hook that leads the stitching above the name */
+.stitch-thread {
+  --duration: 2.1s;
+  display: block;
+  width: 140px;
+  height: 24px;
+  margin: 0 auto 2px;
+  overflow: visible;
+}
+
+.stitch-thread path {
+  fill: none;
+  stroke: var(--thread);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 160;
+  stroke-dashoffset: 160;
+}
+
+.stitch-thread.drawn path {
+  animation: drawThread var(--duration) ease forwards;
+}
+
+@keyframes drawThread {
+  to { stroke-dashoffset: 0; }
+}
+
+.stitch-thread .hook {
+  fill: var(--lilac);
+  opacity: 0;
+  offset-path: path('M4,16 C30,2 60,26 90,10 S132,4 136,14');
+}
+
+.stitch-thread.drawn .hook {
+  animation: hookTravel var(--duration) ease forwards;
+}
+
+@keyframes hookTravel {
+  0% { opacity: 1; offset-distance: 0%; }
+  95% { opacity: 1; }
+  100% { opacity: 0; offset-distance: 100%; }
+}
+
+@supports not (offset-path: path('M0,0')) {
+  .stitch-thread .hook { display: none; }
+}
+
+/* the name itself: each letter is drawn stroke-first (like a hook laying a
+   chain stitch), then fills solid once its outline is complete */
+.stitch-name {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.stitch-text {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 42px;
+}
+
+.stitch-letter {
+  fill: none;
+  stroke: var(--thread);
+  stroke-width: 1;
+  stroke-dasharray: 140;
+  stroke-dashoffset: 140;
+  animation:
+    stitchDraw .4s linear forwards,
+    stitchFill .35s ease forwards;
+  animation-delay: var(--draw-delay, 0s), calc(var(--draw-delay, 0s) + .4s);
+}
+
+@keyframes stitchDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes stitchFill {
+  to { fill: var(--lilac); stroke: var(--lilac); }
+}
+
+/* ---------- choice bubbles ---------- */
+
+.choice-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-top: 30px;
+}
+
+.choice-bubble {
+  width: 175px;
+  height: 175px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px dashed var(--thread);
+  color: var(--ivory);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+}
+
+.choice-bubble:hover {
+  transform: scale(1.06);
+  background: var(--surface-soft);
+}
+
+.choice-bubble .icon {
+  width: 38px;
+  height: 38px;
+  margin-bottom: 0;
+}
+
+.choice-bubble span:last-child {
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--lilac);
+}
+
+/* ---------- developer's secrets list ---------- */
+
+.question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.question-button {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--thread);
+  color: var(--ivory);
+  text-align: left;
+  border-radius: 15px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.question-button:hover {
+  background: var(--surface-soft);
+  transform: translateX(4px);
+}
+
+.question-number {
+  color: var(--lilac);
+  font-weight: 700;
+  min-width: 25px;
+}
+
+/* ---------- message cards ---------- */
+
+.message-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--surface-soft);
+  border-radius: 20px 20px 4px 4px;
+  padding: 25px 25px 30px;
+  margin-top: 20px;
+  line-height: 1.8;
+  color: var(--ivory);
+  font-size: 1.05rem;
+  white-space: pre-line;
+  text-align: left;
+}
+
+.message-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 10px;
+  background-image: radial-gradient(circle at 5px 0, transparent 5px, var(--bg) 5.5px);
+  background-size: 14px 10px;
+  background-repeat: repeat-x;
+}
+
+/* a granny-square swatch in the corner — real granny squares mix colors,
+   so this is where a touch of the romantic red sneaks into the craft motif */
+.message-card::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  opacity: .5;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 4px, var(--lilac) 4px 5px),
+    repeating-linear-gradient(-45deg, transparent 0 4px, var(--rose) 4px 5px);
+  border-radius: 4px;
+}
+
+/* ---------- video ---------- */
+
+.video-box {
+  background: var(--surface);
+  border: 2px dashed var(--thread);
+  border-radius: 20px;
+  padding: 25px;
+  margin: 25px 0;
+}
+
+video {
+  width: 100%;
+  border-radius: 15px;
+  display: none;
+}
+
+#videoPlaceholder {
+  padding: 35px 10px;
+  color: var(--ink-soft);
+}
+
+#markRead:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.small-note {
+  color: var(--ink-soft);
+  font-size: .9rem;
+  margin-top: 15px;
+}
+
+/* ---------- final question ---------- */
+
+.final-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  min-height: 100px;
+}
+
+#finalNo.runaway {
+  position: fixed;
+  z-index: 5;
+}
+
+/* ---------- mobile ---------- */
+
+@media (max-width: 500px) {
+  main {
+    padding: 18px;
+  }
+
+  .choice-bubble {
+    width: 145px;
+    height: 145px;
+  }
+
+  .message-card::after {
+    display: none;
+  }
+
+  .thread-drift {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
