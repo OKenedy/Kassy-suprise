@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A question for you 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #2b1020;
+    --bg2: #4a1a35;
+    --rose: #ff4d7d;
+    --blush: #ffd6e3;
+    --text: #fff4f7;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    color: var(--text);
+    background: radial-gradient(circle at 30% 20%, var(--bg2), var(--bg) 70%);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+  .heart {
+    position: absolute; bottom: -40px;
+    animation: float linear forwards;
+    opacity: .6;
+  }
+  @keyframes float {
+    to { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+  }
+  main { position: relative; z-index: 1; padding: 24px; max-width: 560px; width: 100%; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  h1 {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(2.6rem, 11vw, 4.6rem);
+    line-height: 1.05;
+    margin-bottom: 14px;
+  }
+  p.sub { font-size: 1.1rem; color: var(--blush); margin-bottom: 32px; }
+  .emoji { font-size: 4rem; margin-bottom: 12px; display: block; }
+  .buttons { position: relative; height: 120px; display: flex; justify-content: center; align-items: flex-start; gap: 16px; }
+  button {
+    font: 700 1.15rem 'Nunito', sans-serif;
+    border: 0; border-radius: 999px;
+    padding: 14px 30px;
+    cursor: pointer;
+    transition: transform .15s ease;
+  }
+  button:focus-visible { outline: 3px solid var(--blush); outline-offset: 3px; }
+  #yes { background: var(--rose); color: #fff; box-shadow: 0 8px 24px rgba(255,77,125,.45); }
+  #yes:hover { transform: scale(1.06); }
+  #no { background: transparent; color: var(--blush); border: 2px solid var(--blush); }
+  #no.runaway { position: fixed; z-index: 5; }
+  .answer-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  input {
+    font: 400 1.1rem 'Nunito', sans-serif;
+    padding: 14px 20px; border-radius: 999px;
+    border: 2px solid var(--blush); background: rgba(255,255,255,.08);
+    color: var(--text); width: min(280px, 100%); text-align: center;
+  }
+  input::placeholder { color: rgba(255,214,227,.6); }
+  input:focus-visible { outline: 3px solid var(--blush); outline-offset: 3px; }
+  #submit { background: var(--rose); color: #fff; }
+  .wrong { margin-top: 22px; font-weight: 700; color: #ff9db8; }
+  .hint { margin-top: 8px; color: var(--blush); font-style: italic; }
+  .shake { animation: shake .4s; }
+  @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .photo { max-width: 260px; width: 70%; border-radius: 18px; margin: 18px auto 0; display: block; border: 4px solid var(--blush); }
+  @media (prefers-reduced-motion: reduce) { .heart { animation-duration: 0.01s !important; } }
+</style>
+</head>
+<body>
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+
+<main>
+  <section class="screen active" id="gate">
+    <span class="emoji">🔐</span>
+    <h1>Before we start, you have to answer a simple question</h1>
+    <p class="sub">Who would you love to always be around?</p>
+    <div class="answer-row">
+      <input id="answer" type="text" placeholder="Type your answer" autocomplete="off" aria-label="Your answer">
+      <button id="submit">Enter</button>
+    </div>
+    <p id="wrong" class="wrong" hidden>Wrong, try again 🙈</p>
+    <p id="hint" class="hint" hidden>Hint: it's a boy, and he's around you a lot.</p>
+  </section>
+
+  <section class="screen" id="ask">
+    <span class="emoji">🥺</span>
+    <h1>Hey Kassy❤️, can I be your boyfriend?</h1>
+    <p class="sub">I made this whole website just to ask you.</p>
+    <div class="buttons">
+      <button id="yes">Yes 💖</button>
+      <button id="no">No</button>
+    </div>
+  </section>
+
+  <section class="screen" id="celebrate">
+    <span class="emoji">🎉</span>
+    <h1>She said yes!!</h1>
+    <p class="sub">YOUR_MESSAGE_HERE, you just made me the happiest person ever. I love you. 💕</p>
+    <!-- Optional: add a photo of you two. Put it in the same folder as index.html, e.g. us.jpg -->
+    <!-- <img class="photo" src="us.jpg" alt="Us together"> -->
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script>
+  // ---------- Edit these ----------
+  const noMessages = [
+    "No", "Are you sure? 🥺", "Think again…", "Pretty please?",
+    "I'll buy you food 🍕", "Don't do this to me 😭", "Last chance!", "Okay, just press Yes 💖"
+  ];
+  // --------------------------------
+
+  // Accepted answers (case doesn't matter)
+  const correctAnswers = ['ife', 'ifeoluwa', 'oloyede'];
+
+  const answerInput = document.getElementById('answer');
+  const wrongMsg = document.getElementById('wrong');
+  const hintMsg = document.getElementById('hint');
+
+  function checkAnswer() {
+    const value = answerInput.value.trim().toLowerCase();
+    if (correctAnswers.includes(value)) {
+      document.getElementById('gate').classList.remove('active');
+      document.getElementById('ask').classList.add('active');
+    } else {
+      wrongMsg.hidden = false;
+      hintMsg.hidden = false;
+      answerInput.classList.remove('shake');
+      void answerInput.offsetWidth; // restart animation
+      answerInput.classList.add('shake');
+      answerInput.select();
+    }
+  }
+  document.getElementById('submit').addEventListener('click', checkAnswer);
+  answerInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') checkAnswer(); });
+
+  const yes = document.getElementById('yes');
+  const no = document.getElementById('no');
+  let noCount = 0;
+
+  // Floating hearts
+  const heartsEl = document.getElementById('hearts');
+  const symbols = ['💖', '💕', '💗', '💘'];
+  function spawnHeart() {
+    const h = document.createElement('span');
+    h.className = 'heart';
+    h.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.fontSize = (14 + Math.random() * 22) + 'px';
+    h.style.animationDuration = (6 + Math.random() * 6) + 's';
+    heartsEl.appendChild(h);
+    setTimeout(() => h.remove(), 12000);
+  }
+  setInterval(spawnHeart, 500);
+
+  // "No" button dodges, shrinks, and changes text; Yes grows
+  function dodge() {
+    noCount++;
+    no.textContent = noMessages[Math.min(noCount, noMessages.length - 1)];
+    no.classList.add('runaway');
+    const pad = 20;
+    const x = Math.random() * (window.innerWidth - no.offsetWidth - pad * 2) + pad;
+    const y = Math.random() * (window.innerHeight - no.offsetHeight - pad * 2) + pad;
+    no.style.left = x + 'px';
+    no.style.top = y + 'px';
+    const scale = Math.max(0.55, 1 - noCount * 0.07);
+    no.style.transform = `scale(${scale})`;
+    yes.style.transform = `scale(${1 + noCount * 0.12})`;
+  }
+  no.addEventListener('mouseenter', dodge);
+  no.addEventListener('touchstart', (e) => { e.preventDefault(); dodge(); }, { passive: false });
+  no.addEventListener('click', dodge);
+
+  // Yes!
+  yes.addEventListener('click', () => {
+    document.getElementById('ask').classList.remove('active');
+    document.getElementById('celebrate').classList.add('active');
+    const end = Date.now() + 3000;
+    (function frame() {
+      confetti({ particleCount: 6, angle: 60, spread: 70, origin: { x: 0 }, colors: ['#ff4d7d', '#ffd6e3', '#ffffff'] });
+      confetti({ particleCount: 6, angle: 120, spread: 70, origin: { x: 1 }, colors: ['#ff4d7d', '#ffd6e3', '#ffffff'] });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+  });
+</script>
+</body>
+</html>
