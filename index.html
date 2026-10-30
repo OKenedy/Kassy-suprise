@@ -1,196 +1,953 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A question for you 💌</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --bg: #2b1020;
-    --bg2: #4a1a35;
-    --rose: #ff4d7d;
-    --blush: #ffd6e3;
-    --text: #fff4f7;
+:root {
+  --bg: #2b1020;
+  --bg2: #4a1a35;
+  --rose: #ff4d7d;
+  --blush: #ffd6e3;
+  --text: #fff4f7;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at 30% 20%, var(--bg2), var(--bg) 70%);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  overflow-x: hidden;
+  padding: 20px 0;
+}
+
+.hearts {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.heart {
+  position: absolute;
+  bottom: -40px;
+  animation: float linear forwards;
+  opacity: .6;
+}
+
+@keyframes float {
+  to {
+    transform: translateY(-110vh) rotate(25deg);
+    opacity: 0;
   }
-  * { box-sizing: border-box; margin: 0; }
-  html, body { height: 100%; }
-  body {
-    font-family: 'Nunito', system-ui, sans-serif;
-    color: var(--text);
-    background: radial-gradient(circle at 30% 20%, var(--bg2), var(--bg) 70%);
-    overflow: hidden;
-    display: grid;
-    place-items: center;
-    text-align: center;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  padding: 24px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.screen {
+  display: none;
+  animation: appear .4s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(2.5rem, 10vw, 4.4rem);
+  line-height: 1.05;
+  margin-bottom: 14px;
+}
+
+h2 {
+  font-family: 'Caveat', cursive;
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+p.sub {
+  font-size: 1.05rem;
+  color: var(--blush);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.emoji {
+  font-size: 4rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+button {
+  font: 700 1rem 'Nunito', sans-serif;
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 25px;
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--blush);
+  outline-offset: 3px;
+}
+
+.primary {
+  background: var(--rose);
+  color: white;
+  box-shadow: 0 8px 24px rgba(255,77,125,.35);
+}
+
+.primary:hover {
+  transform: scale(1.05);
+}
+
+.secondary {
+  background: transparent;
+  color: var(--blush);
+  border: 2px solid var(--blush);
+}
+
+.back-button {
+  background: rgba(255,255,255,.1);
+  color: var(--blush);
+  padding: 10px 17px;
+  margin-bottom: 25px;
+  display: block;
+}
+
+.answer-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+input {
+  font: 400 1rem 'Nunito', sans-serif;
+  padding: 14px 18px;
+  border-radius: 999px;
+  border: 2px solid var(--blush);
+  background: rgba(255,255,255,.08);
+  color: var(--text);
+  width: min(280px, 100%);
+  text-align: center;
+}
+
+input::placeholder {
+  color: rgba(255,214,227,.6);
+}
+
+input:focus-visible {
+  outline: 3px solid var(--blush);
+  outline-offset: 3px;
+}
+
+.wrong {
+  margin-top: 18px;
+  font-weight: 700;
+  color: #ff9db8;
+}
+
+.hint {
+  margin-top: 8px;
+  color: var(--blush);
+  font-style: italic;
+}
+
+.shake {
+  animation: shake .4s;
+}
+
+@keyframes shake {
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* Main choice bubbles */
+
+.choice-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-top: 35px;
+}
+
+.choice-bubble {
+  width: 175px;
+  height: 175px;
+  border-radius: 50%;
+  background: rgba(255,77,125,.16);
+  border: 2px solid var(--rose);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  box-shadow: 0 8px 28px rgba(255,77,125,.18);
+}
+
+.choice-bubble:hover {
+  transform: scale(1.07);
+  background: rgba(255,77,125,.3);
+}
+
+.choice-icon {
+  font-size: 2.8rem;
+}
+
+.choice-bubble span:last-child {
+  font-size: .95rem;
+}
+
+/* Developer's Secrets list */
+
+.question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.question-button {
+  width: 100%;
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,214,227,.4);
+  color: var(--text);
+  text-align: left;
+  border-radius: 15px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.question-button:hover {
+  background: rgba(255,77,125,.25);
+  transform: translateX(4px);
+}
+
+.question-number {
+  color: var(--rose);
+  font-weight: 700;
+  min-width: 25px;
+}
+
+.message-card {
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,214,227,.35);
+  border-radius: 20px;
+  padding: 25px;
+  margin-top: 20px;
+  line-height: 1.8;
+  color: var(--blush);
+  font-size: 1.05rem;
+  white-space: pre-line;
+}
+
+/* Video */
+
+.video-box {
+  background: rgba(255,255,255,.08);
+  border: 2px dashed var(--blush);
+  border-radius: 20px;
+  padding: 25px;
+  margin: 25px 0;
+}
+
+video {
+  width: 100%;
+  border-radius: 15px;
+  display: none;
+}
+
+#videoPlaceholder {
+  padding: 35px 10px;
+  color: var(--blush);
+}
+
+#markRead:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.small-note {
+  color: var(--blush);
+  font-size: .9rem;
+  margin-top: 15px;
+}
+
+/* Final question */
+
+.final-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  min-height: 100px;
+}
+
+#finalNo.runaway {
+  position: fixed;
+  z-index: 5;
+}
+
+/* Mobile */
+
+@media (max-width: 450px) {
+  main {
+    padding: 18px;
   }
-  .hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
-  .heart {
-    position: absolute; bottom: -40px;
-    animation: float linear forwards;
-    opacity: .6;
+
+  .choice-bubble {
+    width: 145px;
+    height: 145px;
   }
-  @keyframes float {
-    to { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+
+  .choice-icon {
+    font-size: 2.3rem;
   }
-  main { position: relative; z-index: 1; padding: 24px; max-width: 560px; width: 100%; }
-  .screen { display: none; }
-  .screen.active { display: block; }
-  h1 {
-    font-family: 'Caveat', cursive;
-    font-size: clamp(2.6rem, 11vw, 4.6rem);
-    line-height: 1.05;
-    margin-bottom: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
   }
-  p.sub { font-size: 1.1rem; color: var(--blush); margin-bottom: 32px; }
-  .emoji { font-size: 4rem; margin-bottom: 12px; display: block; }
-  .buttons { position: relative; height: 120px; display: flex; justify-content: center; align-items: flex-start; gap: 16px; }
-  button {
-    font: 700 1.15rem 'Nunito', sans-serif;
-    border: 0; border-radius: 999px;
-    padding: 14px 30px;
-    cursor: pointer;
-    transition: transform .15s ease;
-  }
-  button:focus-visible { outline: 3px solid var(--blush); outline-offset: 3px; }
-  #yes { background: var(--rose); color: #fff; box-shadow: 0 8px 24px rgba(255,77,125,.45); }
-  #yes:hover { transform: scale(1.06); }
-  #no { background: transparent; color: var(--blush); border: 2px solid var(--blush); }
-  #no.runaway { position: fixed; z-index: 5; }
-  .answer-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  input {
-    font: 400 1.1rem 'Nunito', sans-serif;
-    padding: 14px 20px; border-radius: 999px;
-    border: 2px solid var(--blush); background: rgba(255,255,255,.08);
-    color: var(--text); width: min(280px, 100%); text-align: center;
-  }
-  input::placeholder { color: rgba(255,214,227,.6); }
-  input:focus-visible { outline: 3px solid var(--blush); outline-offset: 3px; }
-  #submit { background: var(--rose); color: #fff; }
-  .wrong { margin-top: 22px; font-weight: 700; color: #ff9db8; }
-  .hint { margin-top: 8px; color: var(--blush); font-style: italic; }
-  .shake { animation: shake .4s; }
-  @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-  .photo { max-width: 260px; width: 70%; border-radius: 18px; margin: 18px auto 0; display: block; border: 4px solid var(--blush); }
-  @media (prefers-reduced-motion: reduce) { .heart { animation-duration: 0.01s !important; } }
+}
 </style>
 </head>
+
 <body>
+
 <div class="hearts" id="hearts" aria-hidden="true"></div>
 
 <main>
-  <section class="screen active" id="gate">
-    <span class="emoji">🔐</span>
-    <h1>Before we start, you have to answer a simple question</h1>
-    <p class="sub">Who would you love to always be around?</p>
+
+<!-- 1. PASSWORD GATE -->
+
+<section class="screen active" id="gate">
+  <span class="emoji">🔐</span>
+  <h1>Before we start, you have to answer a simple question</h1>
+  <p class="sub">Who would you love to always be around?</p>
+
+  <div class="answer-row">
+    <input id="answer" type="text" placeholder="Type your answer" autocomplete="off">
+    <button class="primary" id="submit">Enter</button>
+  </div>
+
+  <p id="wrong" class="wrong" hidden>Wrong, try again 🙈</p>
+  <p id="hint" class="hint" hidden>Hint: it's a boy, and he's around you a lot.</p>
+</section>
+
+
+<!-- 2. MAIN MENU -->
+
+<section class="screen" id="home">
+  <span class="emoji">💌</span>
+  <h1>Welcome, Kasimma ❤️</h1>
+  <p class="sub">I have prepared two little things for you. Which one would you like to explore first?</p>
+
+  <div class="choice-container">
+
+    <button class="choice-bubble" id="openVideo">
+      <span class="choice-icon">🎬</span>
+      <span>Watch the video</span>
+    </button>
+
+    <button class="choice-bubble" id="openSecrets">
+      <span class="choice-icon">💻</span>
+      <span>Developer's Secrets</span>
+    </button>
+
+  </div>
+</section>
+
+
+<!-- 3. DEVELOPER'S SECRETS LIST -->
+
+<section class="screen" id="secrets">
+  <button class="back-button" id="secretsHome">← Back to choices</button>
+
+  <span class="emoji">💻</span>
+  <h1>Developer's Secrets</h1>
+  <p class="sub">A few things you should know about what goes on in my head. 😏</p>
+
+  <div class="question-list" id="questionList"></div>
+</section>
+
+
+<!-- 4. INDIVIDUAL QUESTION AND ANSWER -->
+
+<section class="screen" id="secretAnswer">
+  <button class="back-button" id="answerBack">← Back to questions</button>
+
+  <span class="emoji">💗</span>
+  <h2 id="secretTitle"></h2>
+
+  <div id="passwordArea" hidden>
+    <p class="sub">This secret is locked. You'll need the password to see it. 🔒</p>
+
     <div class="answer-row">
-      <input id="answer" type="text" placeholder="Type your answer" autocomplete="off" aria-label="Your answer">
-      <button id="submit">Enter</button>
+      <input id="secretPassword" type="password" placeholder="Enter the password">
+      <button class="primary" id="unlockSecret">Unlock</button>
     </div>
-    <p id="wrong" class="wrong" hidden>Wrong, try again 🙈</p>
-    <p id="hint" class="hint" hidden>Hint: it's a boy, and he's around you a lot.</p>
-  </section>
 
-  <section class="screen" id="ask">
-    <span class="emoji">🥺</span>
-    <h1>Hey Kassy❤️, can I be your boyfriend?</h1>
-    <p class="sub">I made this whole website just to ask you.</p>
-    <div class="buttons">
-      <button id="yes">Yes 💖</button>
-      <button id="no">No</button>
+    <p id="passwordWrong" class="wrong" hidden>Wrong password. Try again 🙈</p>
+  </div>
+
+  <div class="message-card" id="secretContent" hidden></div>
+</section>
+
+
+<!-- 5. REASSURANCE MESSAGE -->
+
+<section class="screen" id="reassurance">
+  <button class="back-button" id="reassuranceBack">← Back to questions</button>
+
+  <span class="emoji">🫶</span>
+  <h1>A little reminder for you</h1>
+
+  <div class="message-card" id="reassuranceText">
+    YOUR_REASSURANCE_MESSAGE_GOES_HERE
+  </div>
+</section>
+
+
+<!-- 6. VIDEO PAGE -->
+
+<section class="screen" id="videoPage">
+  <button class="back-button" id="videoBack">← Back to choices</button>
+
+  <span class="emoji">🎥</span>
+  <h1>Something I made for you</h1>
+  <p class="sub">Take your time and watch this. There's something I want you to see. ❤️</p>
+
+  <div class="video-box">
+
+    <div id="videoPlaceholder">
+      <span style="font-size:3rem;">🎞️</span>
+      <p>Your video will appear here.</p>
+      <p class="small-note">Waiting for the MP4 file...</p>
     </div>
-  </section>
 
-  <section class="screen" id="celebrate">
-    <span class="emoji">🎉</span>
-    <h1>She said yes!!</h1>
-    <p class="sub">YOUR_MESSAGE_HERE, you just made me the happiest person ever. I love you. 💕</p>
-    <!-- Optional: add a photo of you two. Put it in the same folder as index.html, e.g. us.jpg -->
-    <!-- <img class="photo" src="us.jpg" alt="Us together"> -->
-  </section>
+    <video id="myVideo" controls playsinline>
+      Your browser does not support video playback.
+    </video>
+
+  </div>
+
+  <button class="primary" id="markRead" disabled>Mark as Read 💗</button>
+
+  <p class="small-note" id="videoStatus">
+    The button will become available after the video has finished playing.
+  </p>
+</section>
+
+
+<!-- 7. THE QUESTION INTRODUCTION -->
+
+<section class="screen" id="questionIntro">
+  <span class="emoji">🥺</span>
+  <h1>I have a question for you, Kasimma...</h1>
+  <p class="sub">Do you want to hear it? ❤️</p>
+
+  <div class="final-buttons">
+    <button class="primary" id="hearQuestion">Yes, tell me 💖</button>
+    <button class="secondary" id="finalNo">No 🙈</button>
+  </div>
+</section>
+
+
+<!-- 8. QUESTION REVEAL -->
+
+<section class="screen" id="questionReveal">
+  <span class="emoji">💌</span>
+  <h1>Okay, here it is...</h1>
+
+  <div class="message-card">
+    YOUR_FINAL_QUESTION_GOES_HERE
+  </div>
+</section>
+
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
 <script>
-  // ---------- Edit these ----------
-  const noMessages = [
-    "No", "Are you sure? 🥺", "Think again…", "Pretty please?",
-    "I'll buy you food 🍕", "Don't do this to me 😭", "Last chance!", "Okay, just press Yes 💖"
-  ];
-  // --------------------------------
 
-  // Accepted answers (case doesn't matter)
-  const correctAnswers = ['ife', 'ifeoluwa', 'oloyede'];
+/* =========================================
+   EDIT THESE DETAILS
+========================================= */
 
-  const answerInput = document.getElementById('answer');
-  const wrongMsg = document.getElementById('wrong');
-  const hintMsg = document.getElementById('hint');
+const HER_NAME = "Kasimma";
 
-  function checkAnswer() {
-    const value = answerInput.value.trim().toLowerCase();
-    if (correctAnswers.includes(value)) {
-      document.getElementById('gate').classList.remove('active');
-      document.getElementById('ask').classList.add('active');
-    } else {
-      wrongMsg.hidden = false;
-      hintMsg.hidden = false;
-      answerInput.classList.remove('shake');
-      void answerInput.offsetWidth; // restart animation
-      answerInput.classList.add('shake');
-      answerInput.select();
-    }
+/*
+  Leave this empty for now.
+  When you upload your video, put its filename here.
+  Example: "video.mp4"
+*/
+const VIDEO_FILE = "";
+
+
+/* =========================================
+   DEVELOPER'S SECRETS
+========================================= */
+
+const questions = [
+
+  {
+    title: "Question 1 goes here",
+    answer: "YOUR_FIRST_ANSWER_GOES_HERE"
+  },
+
+  {
+    title: "What happens when I think about you?",
+    answer: "I would genuinely continue thinking about you to the point that my friends would be calling my name and I wouldn't even hear them because you're the only one in my mind. And yes, that exact thing has happened before. I would just be smiling so much. You're my home away from home, basically."
+  },
+
+  {
+    title: "What is my favourite thing about you?",
+    answer: "Your voice, your eyes, your smile, which is rare to others but not rare to me, how you make me feel loved, how you can never admit you really, really like me when we all know the truth that you can't resist me, the fact that you do a lot to help others (maybe for your CV), but you do help a lot, like FIG and all those activities. You as a whole are my favourite thing. 😉😏"
+  },
+
+  {
+    title: "What happens to my mood when I see your message?",
+    answer: "It immediately lightens up. I just tend to start smiling while texting you. You're my muse."
+  },
+
+  {
+    title: "How badly do I want to see you?",
+    answer: "Badly. Every day of my life, every minute of my life. Time drags when I'm away from you, but when I'm with you, I just want to remain there forever."
+  },
+
+  {
+    title: "How important are you to me?",
+    answer: "Are we really joking, bruh? You mean the world to me. That's not even a question. You're the number one girl in my life. Like, I wake up thinking about you. If that doesn't say how important you are to me, omooooo."
+  },
+
+  {
+    title: "What would I do just to see you smile?",
+    answer: "I would do almost anything. If it's to break my bank, I would. If it is to be with you until you smile, so be it. If it is to send you a small note to make you happy, I would. I would travel far just to see you smile, Kasimma."
+  },
+
+  {
+    title: "What is my favourite place to be?",
+    answer: "Being with you, obviously. What other answer can there be? 😏😏😏"
+  },
+
+  {
+    title: "What is the one thing I wish I could do right now?",
+    answer: "Kiss you to my heart's content. I want to snuggle you until I start to smell like you. I want to be in your arms for a long time because that is my safe space. I want to see what others haven't. I want to make you feel so good. I want to kiss you so badly every single time.",
+    password: "cheeky"
+  },
+
+  {
+    title: "How lucky do I feel to have you?",
+    answer: "YOUR_TENTH_ANSWER_GOES_HERE"
+  },
+
+  {
+    title: "Question 11 goes here",
+    answer: "YOUR_ELEVENTH_ANSWER_GOES_HERE"
+  },
+
+  {
+    title: "Question 12 goes here",
+    answer: "YOUR_TWELFTH_ANSWER_GOES_HERE"
   }
-  document.getElementById('submit').addEventListener('click', checkAnswer);
-  answerInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') checkAnswer(); });
 
-  const yes = document.getElementById('yes');
-  const no = document.getElementById('no');
-  let noCount = 0;
+];
 
-  // Floating hearts
-  const heartsEl = document.getElementById('hearts');
-  const symbols = ['💖', '💕', '💗', '💘'];
-  function spawnHeart() {
-    const h = document.createElement('span');
-    h.className = 'heart';
-    h.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-    h.style.left = Math.random() * 100 + 'vw';
-    h.style.fontSize = (14 + Math.random() * 22) + 'px';
-    h.style.animationDuration = (6 + Math.random() * 6) + 's';
-    heartsEl.appendChild(h);
-    setTimeout(() => h.remove(), 12000);
-  }
-  setInterval(spawnHeart, 500);
 
-  // "No" button dodges, shrinks, and changes text; Yes grows
-  function dodge() {
-    noCount++;
-    no.textContent = noMessages[Math.min(noCount, noMessages.length - 1)];
-    no.classList.add('runaway');
-    const pad = 20;
-    const x = Math.random() * (window.innerWidth - no.offsetWidth - pad * 2) + pad;
-    const y = Math.random() * (window.innerHeight - no.offsetHeight - pad * 2) + pad;
-    no.style.left = x + 'px';
-    no.style.top = y + 'px';
-    const scale = Math.max(0.55, 1 - noCount * 0.07);
-    no.style.transform = `scale(${scale})`;
-    yes.style.transform = `scale(${1 + noCount * 0.12})`;
-  }
-  no.addEventListener('mouseenter', dodge);
-  no.addEventListener('touchstart', (e) => { e.preventDefault(); dodge(); }, { passive: false });
-  no.addEventListener('click', dodge);
+/* =========================================
+   SCREEN NAVIGATION
+========================================= */
 
-  // Yes!
-  yes.addEventListener('click', () => {
-    document.getElementById('ask').classList.remove('active');
-    document.getElementById('celebrate').classList.add('active');
-    const end = Date.now() + 3000;
-    (function frame() {
-      confetti({ particleCount: 6, angle: 60, spread: 70, origin: { x: 0 }, colors: ['#ff4d7d', '#ffd6e3', '#ffffff'] });
-      confetti({ particleCount: 6, angle: 120, spread: 70, origin: { x: 1 }, colors: ['#ff4d7d', '#ffd6e3', '#ffffff'] });
-      if (Date.now() < end) requestAnimationFrame(frame);
-    })();
+const screens = document.querySelectorAll(".screen");
+
+function showScreen(screenId) {
+  screens.forEach(screen => {
+    screen.classList.remove("active");
   });
+
+  document.getElementById(screenId).classList.add("active");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+/* =========================================
+   FIRST PASSWORD GATE
+========================================= */
+
+const correctAnswers = ["ife", "ifeoluwa", "oloyede"];
+
+const answerInput = document.getElementById("answer");
+const wrongMsg = document.getElementById("wrong");
+const hintMsg = document.getElementById("hint");
+
+function checkAnswer() {
+  const value = answerInput.value.trim().toLowerCase();
+
+  if (correctAnswers.includes(value)) {
+    showScreen("home");
+  } else {
+    wrongMsg.hidden = false;
+    hintMsg.hidden = false;
+
+    answerInput.classList.remove("shake");
+    void answerInput.offsetWidth;
+    answerInput.classList.add("shake");
+
+    answerInput.select();
+  }
+}
+
+document.getElementById("submit").addEventListener("click", checkAnswer);
+
+answerInput.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    checkAnswer();
+  }
+});
+
+
+/* =========================================
+   MAIN MENU NAVIGATION
+========================================= */
+
+document.getElementById("openSecrets").addEventListener("click", function() {
+  showScreen("secrets");
+});
+
+document.getElementById("openVideo").addEventListener("click", function() {
+  showScreen("videoPage");
+});
+
+document.getElementById("secretsHome").addEventListener("click", function() {
+  showScreen("home");
+});
+
+document.getElementById("videoBack").addEventListener("click", function() {
+  showScreen("home");
+});
+
+
+/* =========================================
+   BUILD THE QUESTION LIST
+========================================= */
+
+const questionList = document.getElementById("questionList");
+
+function buildQuestionList() {
+
+  // Reassurance button comes FIRST.
+  const reassuranceButton = document.createElement("button");
+
+  reassuranceButton.className = "question-button";
+  reassuranceButton.innerHTML = `
+    <span class="question-number">💗</span>
+    <span>A little reassurance for you</span>
+  `;
+
+  reassuranceButton.addEventListener("click", function() {
+    showScreen("reassurance");
+  });
+
+  questionList.appendChild(reassuranceButton);
+
+
+  // Then all 12 questions.
+  questions.forEach(function(question, index) {
+
+    const button = document.createElement("button");
+
+    button.className = "question-button";
+
+    button.innerHTML = `
+      <span class="question-number">${index + 1}.</span>
+      <span>${question.title}</span>
+    `;
+
+    button.addEventListener("click", function() {
+      openQuestion(index);
+    });
+
+    questionList.appendChild(button);
+
+  });
+}
+
+buildQuestionList();
+
+
+/* =========================================
+   OPEN INDIVIDUAL QUESTIONS
+========================================= */
+
+let currentQuestionIndex = null;
+
+const secretTitle = document.getElementById("secretTitle");
+const secretContent = document.getElementById("secretContent");
+const passwordArea = document.getElementById("passwordArea");
+const passwordInput = document.getElementById("secretPassword");
+const passwordWrong = document.getElementById("passwordWrong");
+
+function openQuestion(index) {
+
+  currentQuestionIndex = index;
+
+  const question = questions[index];
+
+  secretTitle.textContent = question.title;
+
+  secretContent.hidden = true;
+  passwordArea.hidden = true;
+  passwordWrong.hidden = true;
+  passwordInput.value = "";
+
+  if (question.password) {
+    passwordArea.hidden = false;
+  } else {
+    secretContent.textContent = question.answer;
+    secretContent.hidden = false;
+  }
+
+  showScreen("secretAnswer");
+}
+
+
+/* =========================================
+   QUESTION 9 PASSWORD
+========================================= */
+
+function unlockQuestion() {
+
+  const question = questions[currentQuestionIndex];
+
+  const enteredPassword = passwordInput.value.trim().toLowerCase();
+
+  if (enteredPassword === question.password.toLowerCase()) {
+
+    passwordArea.hidden = true;
+
+    secretContent.textContent = question.answer;
+    secretContent.hidden = false;
+
+  } else {
+
+    passwordWrong.hidden = false;
+
+    passwordInput.classList.remove("shake");
+    void passwordInput.offsetWidth;
+    passwordInput.classList.add("shake");
+
+    passwordInput.select();
+  }
+}
+
+document.getElementById("unlockSecret").addEventListener("click", unlockQuestion);
+
+passwordInput.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    unlockQuestion();
+  }
+});
+
+
+/* =========================================
+   BACK BUTTONS
+========================================= */
+
+document.getElementById("answerBack").addEventListener("click", function() {
+  showScreen("secrets");
+});
+
+document.getElementById("reassuranceBack").addEventListener("click", function() {
+  showScreen("secrets");
+});
+
+
+/* =========================================
+   REASSURANCE MESSAGE
+========================================= */
+
+// Your reassurance message will go here.
+document.getElementById("reassuranceText").textContent =
+  "YOUR_REASSURANCE_MESSAGE_GOES_HERE";
+
+
+/* =========================================
+   VIDEO SETUP
+========================================= */
+
+const video = document.getElementById("myVideo");
+const videoPlaceholder = document.getElementById("videoPlaceholder");
+const markRead = document.getElementById("markRead");
+const videoStatus = document.getElementById("videoStatus");
+
+let videoFinished = false;
+
+if (VIDEO_FILE !== "") {
+
+  video.src = VIDEO_FILE;
+  video.style.display = "block";
+  videoPlaceholder.style.display = "none";
+
+}
+
+video.addEventListener("ended", function() {
+
+  videoFinished = true;
+
+  markRead.disabled = false;
+
+  videoStatus.textContent =
+    "You've finished watching! Click below when you're ready. 💗";
+
+});
+
+markRead.addEventListener("click", function() {
+
+  if (!videoFinished) {
+    return;
+  }
+
+  showScreen("questionIntro");
+
+});
+
+
+/* =========================================
+   FINAL QUESTION INTRODUCTION
+========================================= */
+
+document.getElementById("hearQuestion").addEventListener("click", function() {
+  showScreen("questionReveal");
+});
+
+
+/* =========================================
+   PLAYFUL NO BUTTON
+========================================= */
+
+const finalNo = document.getElementById("finalNo");
+
+const noMessages = [
+  "No 🙈",
+  "Are you sure? 🥺",
+  "Think again...",
+  "Pretty please?",
+  "Just say yes 😭",
+  "You know you want to 😂"
+];
+
+let noCount = 0;
+
+function dodgeFinalNo() {
+
+  noCount++;
+
+  finalNo.textContent =
+    noMessages[Math.min(noCount, noMessages.length - 1)];
+
+  finalNo.classList.add("runaway");
+
+  const padding = 20;
+
+  const maxX = window.innerWidth - finalNo.offsetWidth - padding;
+  const maxY = window.innerHeight - finalNo.offsetHeight - padding;
+
+  const x = Math.random() * Math.max(0, maxX - padding) + padding;
+  const y = Math.random() * Math.max(0, maxY - padding) + padding;
+
+  finalNo.style.left = x + "px";
+  finalNo.style.top = y + "px";
+}
+
+finalNo.addEventListener("mouseenter", dodgeFinalNo);
+
+finalNo.addEventListener("touchstart", function(e) {
+  e.preventDefault();
+  dodgeFinalNo();
+}, { passive: false });
+
+finalNo.addEventListener("click", dodgeFinalNo);
+
+
+/* =========================================
+   FLOATING HEARTS
+========================================= */
+
+const heartsEl = document.getElementById("hearts");
+
+const symbols = ["💖", "💕", "💗", "💘"];
+
+function spawnHeart() {
+
+  const heart = document.createElement("span");
+
+  heart.className = "heart";
+
+  heart.textContent =
+    symbols[Math.floor(Math.random() * symbols.length)];
+
+  heart.style.left = Math.random() * 100 + "vw";
+
+  heart.style.fontSize =
+    (14 + Math.random() * 22) + "px";
+
+  heart.style.animationDuration =
+    (6 + Math.random() * 6) + "s";
+
+  heartsEl.appendChild(heart);
+
+  setTimeout(function() {
+    heart.remove();
+  }, 12000);
+}
+
+setInterval(spawnHeart, 500);
+
 </script>
+
 </body>
 </html>
