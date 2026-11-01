@@ -6,6 +6,9 @@ export function initFinalQuestion() {
   const celebration = document.getElementById('revealCelebration');
   let noCount = 0;
 
+  document.getElementById('questionIntroBack').addEventListener('click', () => goTo(SCREENS.VIDEO));
+  document.getElementById('questionRevealBack').addEventListener('click', () => goTo(SCREENS.QUESTION_INTRO));
+
   function showCelebration() {
     celebration.replaceChildren();
 

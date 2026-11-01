@@ -36,6 +36,7 @@ function playStitchIntro() {
 }
 
 export function initHome() {
+  document.getElementById('homeBack').addEventListener('click', () => goTo(SCREENS.GATE));
   document.getElementById('openVideo').addEventListener('click', () => goTo(SCREENS.VIDEO));
   document.getElementById('openSecrets').addEventListener('click', () => goTo(SCREENS.SECRETS));
 

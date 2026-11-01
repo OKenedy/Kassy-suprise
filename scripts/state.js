@@ -26,7 +26,6 @@ const SCREEN_PROGRESS = {
 
 let current = SCREENS.GATE;
 let currentContext = null;
-const SAVED_SCREEN_KEY = 'kassy-surprise-screen';
 
 export function getCurrent() {
   return current;
@@ -40,7 +39,6 @@ export function updateCurrentContext(context) {
   currentContext = context;
   const state = { screenId: current, context };
   history.replaceState(state, '', window.location.href);
-  localStorage.setItem(SAVED_SCREEN_KEY, JSON.stringify(state));
 }
 
 function updateProgress(screenId) {
@@ -58,7 +56,6 @@ function showScreen(screenId, context = null) {
   current = screenId;
   currentContext = context;
   updateProgress(screenId);
-  localStorage.setItem(SAVED_SCREEN_KEY, JSON.stringify({ screenId, context }));
 
   document.dispatchEvent(new CustomEvent('screenchange', { detail: { screenId, context } }));
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -70,15 +67,9 @@ export function goTo(screenId, context = null) {
   showScreen(screenId, context);
 }
 
-export function restoreSavedScreen() {
-  const saved = JSON.parse(localStorage.getItem(SAVED_SCREEN_KEY) || 'null');
-  const screenId = Object.values(SCREENS).includes(saved?.screenId) ? saved.screenId : SCREENS.GATE;
-  const context = saved?.context && Number.isInteger(saved.context.questionIndex)
-    ? saved.context
-    : null;
-
-  history.replaceState({ screenId, context }, '', window.location.href);
-  showScreen(screenId, context);
+export function initializeNavigation() {
+  history.replaceState({ screenId: SCREENS.GATE, context: null }, '', window.location.href);
+  showScreen(SCREENS.GATE);
 }
 
 window.addEventListener('popstate', (event) => {
