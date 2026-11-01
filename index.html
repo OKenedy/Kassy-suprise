@@ -169,6 +169,12 @@
   </div>
 
   <button class="primary" id="markRead" disabled>Mark as Read 💗</button>
+  <button class="secondary" id="skipVideo" type="button">Skip</button>
+  <form class="answer-row skip-password-form" id="skipPasswordForm" hidden>
+    <input id="skipPassword" type="password" placeholder="Enter password" aria-label="Skip password" autocomplete="off">
+    <button class="primary" type="submit">Continue</button>
+  </form>
+  <p class="wrong" id="skipPasswordWrong" role="alert" hidden>That password is not correct. Try again.</p>
 
   <p class="small-note" id="videoStatus">
     The button will become available after the video has finished playing.
@@ -202,9 +208,8 @@
   <h1>Okay, here it is...</h1>
   <div class="chain-divider" aria-hidden="true"></div>
 
-  <div class="message-card">
-    YOUR_FINAL_QUESTION_GOES_HERE
-  </div>
+  <div class="message-card"></div>
+  <div id="revealCelebration" aria-hidden="true"></div>
 </section>
 
 </main>

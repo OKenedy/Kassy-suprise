@@ -3,8 +3,7 @@
 
 export const HER_NAME = 'Kasimma';
 
-// Leave empty until the video file is uploaded. Example: "video.mp4"
-export const VIDEO_FILE = '';
+export const VIDEO_FILE = 'video.mp4';
 
 export const correctAnswers = ['ife', 'ifeoluwa', 'oloyede'];
 

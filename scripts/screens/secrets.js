@@ -1,5 +1,5 @@
 import { questions, reassuranceMessage } from '../config.js';
-import { goTo, SCREENS } from '../state.js';
+import { goTo, SCREENS, updateCurrentContext } from '../state.js';
 
 export function initSecrets() {
   const questionList = document.getElementById('questionList');
@@ -15,20 +15,17 @@ export function initSecrets() {
     currentQuestionIndex = index;
     const question = questions[index];
 
+    goTo(SCREENS.SECRET_ANSWER, { questionIndex: index, unlocked: !question.password });
+  }
+
+  function displayQuestion(question, unlocked = !question.password) {
     secretTitle.textContent = question.title;
-    secretContent.hidden = true;
-    passwordArea.hidden = true;
+    secretContent.hidden = !unlocked;
+    passwordArea.hidden = unlocked;
     passwordWrong.hidden = true;
     passwordInput.value = '';
 
-    if (question.password) {
-      passwordArea.hidden = false;
-    } else {
-      secretContent.textContent = question.answer;
-      secretContent.hidden = false;
-    }
-
-    goTo(SCREENS.SECRET_ANSWER);
+    if (unlocked) secretContent.textContent = question.answer;
   }
 
   function unlockQuestion() {
@@ -39,6 +36,7 @@ export function initSecrets() {
       passwordArea.hidden = true;
       secretContent.textContent = question.answer;
       secretContent.hidden = false;
+      updateCurrentContext({ questionIndex: currentQuestionIndex, unlocked: true });
     } else {
       passwordWrong.hidden = false;
       passwordInput.classList.remove('shake');
@@ -76,6 +74,16 @@ export function initSecrets() {
   document.getElementById('reassuranceBack').addEventListener('click', () => goTo(SCREENS.SECRETS));
   document.getElementById('unlockSecret').addEventListener('click', unlockQuestion);
   passwordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') unlockQuestion(); });
+
+  document.addEventListener('screenchange', (event) => {
+    if (event.detail.screenId !== SCREENS.SECRET_ANSWER) return;
+
+    const index = event.detail.context?.questionIndex;
+    if (!Number.isInteger(index) || !questions[index]) return;
+
+    currentQuestionIndex = index;
+    displayQuestion(questions[index], event.detail.context.unlocked);
+  });
 
   buildQuestionList();
 }

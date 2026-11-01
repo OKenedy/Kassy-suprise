@@ -556,6 +556,18 @@ input:focus-visible {
   margin: 25px 0;
 }
 
+.skip-password-form {
+  margin-top: 12px;
+}
+
+.skip-password-form[hidden] {
+  display: none;
+}
+
+#skipPasswordWrong {
+  margin-top: 10px;
+}
+
 video {
   width: 100%;
   border-radius: 15px;
@@ -588,6 +600,44 @@ video {
   flex-wrap: wrap;
   margin-top: 30px;
   min-height: 100px;
+}
+
+#revealCelebration {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.celebration-particle {
+  position: absolute;
+  bottom: -40px;
+  font-size: 1.4rem;
+  line-height: 1;
+  opacity: .58;
+  animation: happy-bounce 7s ease-in-out forwards;
+}
+
+.celebration-yarn {
+  width: 28px;
+  height: 28px;
+  color: var(--thread);
+  opacity: .5;
+}
+
+.celebration-yarn svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes happy-bounce {
+  0% { opacity: 0; transform: translate(0, 0) scale(.85); }
+  12% { opacity: .58; }
+  40% { transform: translate(calc(var(--sway) * .5), -32vh) scale(1); }
+  55% { transform: translate(calc(var(--sway) * .65), -28vh) scale(.98); }
+  82% { opacity: .5; transform: translate(var(--sway), -72vh) scale(.96); }
+  100% { opacity: 0; transform: translate(var(--sway), -95vh) scale(.9); }
 }
 
 #finalNo.runaway {
