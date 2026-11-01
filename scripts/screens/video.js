@@ -51,4 +51,13 @@ export function initVideo() {
   });
 
   document.getElementById('videoBack').addEventListener('click', () => goTo(SCREENS.HOME));
+
+  document.addEventListener('screenchange', (event) => {
+    if (event.detail.screenId === SCREENS.VIDEO) return;
+
+    video.pause();
+    skipPasswordForm.hidden = true;
+    skipPassword.value = '';
+    skipPasswordWrong.hidden = true;
+  });
 }
